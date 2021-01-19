@@ -1,0 +1,161 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <title>Web File System</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0", charset=utf-8>
+    
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+        <link rel="stylesheet" type="text/css" href="scripts/jquery-ui-iconfont/jquery-ui-1.12.icon-font.css">
+
+        <script src = "scripts/jquery-3.5.1.js"></script>
+        <script src = "scripts/jquery-ui-1.12.1/jquery-ui.js"></script>
+        <script src = "scripts/javascript.js"></script>
+    </head>
+
+    <body">
+        <div id="topBar">
+            <table id="topTable">
+                <tr>
+                    <td id="btnCell">
+                        <div id="buttons">
+                            <span id="searchBtn" class="ui-icon ui-icon-search btnIcons" style="font-size: 100%"></span>
+                            <span id="homeBtn" class="ui-icon ui-icon-home btnIcons" style="font-size: 110%"></span>
+                            <span id="backBtn" class="ui-icon ui-icon-arrow-l btnIcons" style="font-size: 120%"></span>
+                        </div>
+                    </td>
+
+                    <td id="pathCell">
+                        <div id="pathHolder">
+                        </div>
+                    </td>
+                    
+                    <td>
+                        <div id="settings">
+                            <span id="addBtn" class="ui-icon ui-icon-circle-b-plus btnIcons" style="font-size: 110%"></span>
+                            <span id="viewBtn" class="ui-icon ui-icon-view-list btnIcons" style="font-size: 110%"></span>
+                            <span id="userBtn" class="ui-icon ui-icon-person btnIcons" style="font-size: 110%"></span>
+                            <span id="settingsBtn" class="ui-icon ui-icon-gear btnIcons" style="font-size: 120%"></span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="tableHead"></div>
+
+        <div id="items"></div>
+        
+        <ul id="eMenu" class="cMenu">
+            <li id="eMenu-view">View <span class="ui-icon ui-icon-caret-r cMenu-pointer"></span></li>
+            <li id="eMenu-sort">Sort by <span class="ui-icon ui-icon-caret-r cMenu-pointer"></li>
+            <li id="eMenu-refresh">Refresh</li>
+            <li id="eMenu-paste">Paste</li>
+            <li id="eMenu-newFolder">New folder</li>
+            <!-- <li id="eMenu-properties">Properties</li> -->
+        </ul>
+
+        <ul id="iMenu" class="cMenu">
+            <li id="iMenu-download">Download</li>
+            <li id="iMenu-cut">Cut</li>
+            <li id="iMenu-copy">Copy</li>
+            <li id="iMenu-delete">Delete</li>
+            <li id="iMenu-rename">Rename</li>
+            <li id="iMenu-properties">Properties</li>
+        </ul>
+
+        <ul id="vMenu" class="cMenu">
+            <li id="vMenu-icons">Icons <span id="vIcons" class="ui-icon cMenu-pointer"></span></li>
+            <li id="vMenu-list">List <span id="vList" class="ui-icon cMenu-pointer"></span></li>
+        </ul>
+
+        <ul id="sMenu" class="cMenu">
+            <li id="sMenu-name">Name <span id="sName" class="ui-icon cMenu-pointer"></span></li>
+            <li id="sMenu-date">Date <span id="sDate" class="ui-icon cMenu-pointer"></span></li>
+            <li id="sMenu-owner">Owner <span id="sOwner" class="ui-icon cMenu-pointer"></span></li>
+            <li id="sMenu-type">Type <span id="sType" class="ui-icon cMenu-pointer"></span></li>
+            <li id="sMenu-size">Size <span id="sSize" class="ui-icon cMenu-pointer"></span></li>
+        </ul>
+
+        <div id="propertiesWindow">
+            <div id="propTitleBar">
+                <label>Properties</label>
+                <span id="propWinCloseBtn" class="ui-icon ui-icon-close btnIcons"></span>
+            </div>
+
+            <table class="prop-table">
+                <tr class="propTR">
+                    <td id="iconHolder" class="prop-item">
+                        <img id="prop-icon" class="icon-48" src="icons/folder.png">
+                    </td>
+                    <td class="prop-value">
+                        <div class="prop-val-holder">
+                            <input id="prop-name" value="">
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr class="propTR">
+                    <td class="prop-item">
+                        <label>Type :</label>
+                    </td>
+                    <td class="prop-value">
+                        <div class="prop-val-holder">
+                            <label id="prop-type"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="propTR">
+                    <td class="prop-item">
+                        <label>Location :</label>
+                    </td>
+                    <td class="prop-value">
+                        <div class="prop-val-holder">
+                            <label id="prop-path"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="propTR">
+                    <td class="prop-item">
+                        <label>Size :</label>
+                    </td>
+                    <td class="prop-value">
+                        <div class="prop-val-holder">
+                            <label id="prop-size"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="propTR">
+                    <td class="prop-item">
+                        <label>Uploaded by :</label>
+                    </td>
+                    <td class="prop-value">
+                        <div class="prop-val-holder">
+                            <label id="prop-owner"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="propTR">
+                    <td class="prop-item">
+                        <label>Modified :</label>
+                    </td>
+                    <td class="prop-value">
+                        <div class="prop-val-holder">
+                            <label id="prop-date"></label>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="prop-btns">
+                <span id="propWinStarBtn" class="ui-icon ui-icon-star-b btnIcons" style="font-size: 200%"></span>
+                <span id="propWinHideBtn" class="ui-icon ui-icon-window-close btnIcons" style="font-size: 200%"></span>
+                <span id="propWinFavoriteBtn" class="ui-icon ui-icon-heart-b btnIcons" style="font-size: 200%"></span>
+            </div>
+        </div>
+    </body>
+</html>
