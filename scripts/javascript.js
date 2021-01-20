@@ -1,4 +1,10 @@
-/*jshint esversion: 6 */
+// =============================================================================
+// javascript.js
+// project: Web File System
+// author: Zifan Yang
+// date created: 2020-08-03
+// last modified: 2021-01-20
+// =============================================================================
 
 var path;
 var items;
@@ -14,23 +20,33 @@ var filesInMemory = [];
 var idOfNameInEditing;
 var showingPropertiesOf = -1;
 
+//where to find json file for root directory
+var root = 'json/';
+
 $("document").ready(function() {
+    //prevent cache as the data may updating frequently
     $.ajaxSetup({
         cache: false,
     });
     
+    //default view settings
     view = 'icons';
     sortBy = 'date';
     reversed = false;
 
-    var root = 'json/';
-
     goToDir(root);
 
+    addMenuListener();
+
+    //temporary updating method. will be replaced by socket
     window.setInterval(function(){
         checkUpdate();
     }, 1000);
+});
 
+//add click listeners to button
+function addMenuListener(){
+    var root = 'json/';
     $('#backBtn').click(function(event){
         if(path != root){
             var indexOfSlash = path.substring(0, path.length - 1).lastIndexOf('/');
@@ -49,7 +65,7 @@ $("document").ready(function() {
 
     $('#addBtn').click(function(event){
         // var directory = false;
-        // var name = 'Pantyhose.mp4';
+        // var name = 'filename.dat';
         // var owner = '192.168.8.192';
         // var date = '2020-08-21 04:24:51am';
         // var size = '43,343KB'
@@ -80,6 +96,7 @@ $("document").ready(function() {
         $(".cMenu").finish().hide(100);
     });
 
+    //customized right-click menu
     $(document).bind("contextmenu", function(event) {
         event.preventDefault();
         
@@ -210,8 +227,9 @@ $("document").ready(function() {
         showingPropertiesOf = -1;
         $("#propertiesWindow").finish().hide(100);
     });
-});
+}
 
+//begin the redirection to another file
 function goToDir(p){
     path = p;
     showingPropertiesOf = -1;
@@ -219,6 +237,7 @@ function goToDir(p){
     loadJSON();
 }
 
+//User ajax to read the json file in the backend once succeed, store the data in an array
 function loadJSON(){
     $.ajax({
         dataType: 'json',
@@ -250,10 +269,11 @@ function loadJSON(){
             showPath();
             sortItem();
             displayItems();
-            addListener();
+            addFilesListener();
         }
     });
 
+    //check if there is any update in this directory
     $.ajax({
         dataType: 'json',
         url: path + 'update.json',
@@ -283,6 +303,7 @@ function getFileType(name){
     return indexOfDot === -1 ? 'Unknown' : name.substring(indexOfDot+1, name.length);
 }
 
+//display current path in the top address bar
 function showPath(){
     $("#pathHolder").empty();
     $("#pathHolder").append('<label class="slash" style="padding-left: 10px;"> / </label>');
@@ -315,6 +336,7 @@ function showPath(){
     }
 }
 
+//sort files by data|name|owner|type|size
 function sortItem(){
     $("#sDate").removeClass("ui-icon-radio-btn-on");
     $("#sName").removeClass("ui-icon-radio-btn-on");
@@ -355,6 +377,7 @@ function sortItem(){
     }
 }
 
+//construct the files container
 function displayItems(){
     idOfNameInEditing = -1;
 
@@ -512,6 +535,7 @@ function displayItems(){
     $("#items").append('<br><br><br>');
 }
 
+//format the filename to make it display properly
 function getDisplayName(name){
     if(name.length >= 14){
         var indexOfSpace = -1;
@@ -564,6 +588,7 @@ function addSortListener(colName){
     });
 }
 
+//begin a sort action
 function goSortBy(a){
     if(sortBy == a){
         reversed = reversed ? false : true;
@@ -574,9 +599,10 @@ function goSortBy(a){
     sortBy = a;
     sortItem();
     displayItems();
-    addListener();
+    addFilesListener();
 }
 
+//unselect the file previously selected
 function dimLastClickedItem(){
     if(view == 'icons'){
         $(lastClicked).removeClass("highlight");
@@ -587,6 +613,7 @@ function dimLastClickedItem(){
     }
 }
 
+//hight light an item whe selected 
 function highLightItem(id){
     dimLastClickedItem();
     
@@ -614,7 +641,8 @@ function highLightItem(id){
     lastClicked = itemId;
 }
 
-function addListener(){
+// add listener to files
+function addFilesListener(){
     var item;
     var HLClass;
 
@@ -751,6 +779,7 @@ function getItemName(id){
     }
 }
 
+//check if a rename in the backend is necessary
 function prepareRename(){
     var id = getIdFromElement(lastClicked);
     var name = getItemName(id);
@@ -766,6 +795,7 @@ function prepareRename(){
     }
 }
 
+//hide file icon and call another function to 
 function deleteItem(){
     var id = getIdFromElement(lastClicked);
     var itemClass;
@@ -781,6 +811,7 @@ function deleteItem(){
     rmFromDir(id, false);
 }
 
+//begin a rename action
 function renameItem(){
     var id = getIdFromElement(lastClicked);
     var name = getItemName(id);
@@ -823,6 +854,7 @@ function renameItem(){
     });
 }
 
+//right click menu functions
 function showProperties(ClickedOnItem){
     if(ClickedOnItem){
         var id = getIdFromElement(lastClicked);
@@ -866,6 +898,7 @@ function changeView(toView){
     addListener();
 }
 
+//fade current file and then pull any files after current file
 function playRemoveAnimation(id, dragged){
     var idPostfix;
 
